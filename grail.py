@@ -132,12 +132,12 @@ def abort(code, reason=None):
     raise ResponseException(Response(code, reason=reason))
 
 class Response:
-    def __init__(self, status_code, *, headers={}, data=None, reason=None):
+    def __init__(self, status_code, *, headers=None, data=None, reason=None):
         self.status_code = status_code
         self.headers = headers or {}
         self.reason = reason or REASONS[status_code]
         self.data = data
-        if self.data is None and 'content-length' not in headers:
+        if self.data is None and 'content-length' not in self.headers:
             self.headers['content-length'] = b'0'
 
 class HttpServer:

@@ -132,7 +132,7 @@ def abort(code, reason=None):
     raise ResponseException(Response(code, reason=reason))
 
 class Response:
-    def __init__(self, status_code, *, headers=None, data=None, reason=None):
+    def __init__(self, status_code, *, headers={}, data=None, reason=None):
         self.status_code = status_code
         self.headers = headers or {}
         self.reason = reason or REASONS[status_code]
@@ -191,7 +191,7 @@ class HttpServer:
     @handle_response.register(bytes)
     async def handle_response_bytes(self, res):
         await self.send_response(Response(200,
-            headers={'content-length': len(res)}))
+            headers={'content-length': str(len(res)).encode('utf-8')}))
         await self.send_data(res)
 
     @handle_response.register(str)
